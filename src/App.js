@@ -1,10 +1,13 @@
 
 import "./App.css";
+import { ListKontak } from "./components";
 
 function App() {
   return (
-    <div className="App">
-      <h2>Kontak App</h2>
+    <div style={{padding: '30px'}} >
+      <h2>Aplikasi Kontak App - Hooks Redux</h2>
+      <hr />
+      <ListKontak />
     </div>
   );
 }
