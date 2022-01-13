@@ -1,31 +1,57 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addKontak, getListKontak } from "../../actions/kontakAction";
+import { addKontak, getListKontak, updateKontak } from "../../actions/kontakAction";
 
 function AddKontak() {
   const [nama, setNama] = useState("");
   const [nohp, setNohp] = useState("");
+  const [id, setId] = useState("");
 
-  const { addKontakResult } = useSelector((state) => state.kontakReducer)
+  const { addKontakResult, detailKontakResult, updateKontakResult } = useSelector(
+    (state) => state.kontakReducer
+  );
   const dispatch = useDispatch();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(nama + nohp);
-    dispatch(addKontak({ nama: nama, nohp: nohp }));
+
+    if (id) {
+      //update kontak
+      dispatch(updateKontak({ id: id, nama: nama, nohp: nohp }));
+    } else {
+      //add kontak
+      dispatch(addKontak({ nama: nama, nohp: nohp }));
+    }
   };
 
   useEffect(() => {
-      if(addKontakResult){
-          dispatch(getListKontak())
-          setNama('')
-          setNohp('')
-      }
-  }, [addKontakResult, dispatch])
+    if (addKontakResult) {
+      dispatch(getListKontak());
+      setNama("");
+      setNohp("");
+    }
+  }, [addKontakResult, dispatch]);
+
+  useEffect(() => {
+    if (detailKontakResult) {
+      setNama(detailKontakResult.nama);
+      setNohp(detailKontakResult.nohp);
+      setId(detailKontakResult.id);
+    }
+  }, [detailKontakResult, dispatch]);
+
+  useEffect(() => {
+    if (updateKontakResult) {
+      dispatch(getListKontak());
+      setNama("");
+      setNohp("");
+      setId("");
+    }
+  }, [updateKontakResult, dispatch]);
 
   return (
     <div>
-      <h4>Add Kontak</h4>
+      <h4>{id ? "Edit Kontak" : "Add Kontak"}</h4>
       <form onSubmit={(event) => handleSubmit(event)}>
         <input
           type="text"
