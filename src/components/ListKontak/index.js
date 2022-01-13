@@ -1,11 +1,15 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getListKontak } from "../../actions/kontakAction";
+import { deleteKontak, getListKontak } from "../../actions/kontakAction";
 import kontak from "../../reducers/kontak";
 
 function ListKontak() {
-  const { getListKontakResult, getListKontakLoading, getListKontakError } =
-    useSelector((state) => state.kontakReducer);
+  const {
+    getListKontakResult,
+    getListKontakLoading,
+    getListKontakError,
+    deleteKontakResult,
+  } = useSelector((state) => state.kontakReducer);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -14,6 +18,12 @@ function ListKontak() {
     dispatch(getListKontak());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (deleteKontakResult) {
+      dispatch(getListKontak());
+    }
+  }, [deleteKontakResult, dispatch]);
+
   return (
     <div>
       <h3>List Kontak</h3>
@@ -21,7 +31,10 @@ function ListKontak() {
         getListKontakResult.map((kontak) => {
           return (
             <p key={kontak.id}>
-              {kontak.nama} - {kontak.nohp}
+              {kontak.nama} -{kontak.nohp} -
+              <button onClick={() => dispatch(deleteKontak(kontak.id))}>
+                Hapus
+              </button>
             </p>
           );
         })
